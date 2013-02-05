@@ -18,18 +18,10 @@
     "externalSources" : {
         "file-source1" : {
 			"classname" : "org.modeshape.connector.filesystem.FileSystemConnector",
-            "directoryPath" : "${user.home}/service-repo1",
+            "directoryPath" : "target",
             "extraPropertiesStorage" : "json",
             "projections" : [
-             	"default:/source1 => /source1"
-            ]
-        },
-        "file-source2" : {
-			"classname" : "org.modeshape.connector.filesystem.FileSystemConnector",
-            "directoryPath" : "${user.home}/service-repo2",
-            "extraPropertiesStorage" : "json",
-            "projections" : [
-             	"default:/source2 => /source2"
+             	"default:/surefire => /surefire"
             ]
         }
     }

@@ -67,10 +67,7 @@ public class ModeShapeExample {
 
             // Get the root node ...
             Node root = session.getRootNode();
-            Node nodeSource1 = root.getNode("source1");
-            Node nodeSource2 = root.getNode("source2");
-            addSampleNode(session, nodeSource1);
-            addSampleNode(session, nodeSource2);
+            addSampleNode(session, root.getNode("surefire"));
             session.save();
 
         } catch (Exception e) {

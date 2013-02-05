@@ -1,7 +1,6 @@
 {
-    "name" : "Persisted-Repository",
+    "name" : "FederatedRepository",
     "workspaces" : {
-        "predefined" : ["otherWorkspace"],
         "default" : "default",
         "allowCreation" : true
     },
@@ -12,12 +11,26 @@
         }
     },
     "storage" : {
-        "cacheConfiguration" : "infinispan-configuration.xml",
-        "cacheName" : "persisted-repository",
-        "binaryStorage" : {
-            "type" : "file",
-            "directory": "target/binaries",
-            "minimumBinarySizeInBytes" : 999
+        "cacheName" : "persistentRepository",
+        "cacheConfiguration" : "infinispan-configuration.xml"
+        
+    },
+    "externalSources" : {
+        "file-source1" : {
+			"classname" : "org.modeshape.connector.filesystem.FileSystemConnector",
+            "directoryPath" : "${user.home}/service-repo1",
+            "extraPropertiesStorage" : "json",
+            "projections" : [
+             	"default:/source1 => /source1"
+            ]
+        },
+        "file-source2" : {
+			"classname" : "org.modeshape.connector.filesystem.FileSystemConnector",
+            "directoryPath" : "${user.home}/service-repo2",
+            "extraPropertiesStorage" : "json",
+            "projections" : [
+             	"default:/source2 => /source2"
+            ]
         }
     }
 

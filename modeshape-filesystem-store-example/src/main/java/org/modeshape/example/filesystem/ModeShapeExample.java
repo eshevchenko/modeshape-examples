@@ -1,19 +1,30 @@
 package org.modeshape.example.filesystem;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Random;
-import javax.jcr.*;
+
+import javax.jcr.ItemExistsException;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.Repository;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.lock.LockException;
+import javax.jcr.nodetype.ConstraintViolationException;
+import javax.jcr.nodetype.NoSuchNodeTypeException;
+import javax.jcr.version.VersionException;
+
 import org.modeshape.common.collection.Problems;
 import org.modeshape.jcr.ModeShapeEngine;
 import org.modeshape.jcr.RepositoryConfiguration;
-import org.modeshape.jcr.value.BinaryValue;
 
 public class ModeShapeExample {
 
     public static void main( String[] argv ) {
 
-        Random rnd = new Random();
+  
 
         // Create and start the engine ...
         ModeShapeEngine engine = new ModeShapeEngine();
@@ -56,24 +67,12 @@ public class ModeShapeExample {
 
             // Get the root node ...
             Node root = session.getRootNode();
-            assert root != null;
-
-            System.out.println("Found the root node in the \"" + session.getWorkspace().getName() + "\" workspace");
-
-            Node n = root.addNode("Node" + rnd.nextInt());
-
-            n.setProperty("key", "value");
-            n.setProperty("content", session.getValueFactory().createBinary(new ByteArrayInputStream(new byte[1000])));
-
+            Node nodeSource1 = root.getNode("source1");
+            Node nodeSource2 = root.getNode("source2");
+            addSampleNode(session, nodeSource1);
+            addSampleNode(session, nodeSource2);
             session.save();
 
-            System.out.println("Added one node under root");
-            System.out.println("+ Root childs");
-
-            NodeIterator it = root.getNodes();
-            while (it.hasNext()) {
-                System.out.println("+---> " + it.nextNode().getName());
-            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -87,5 +86,13 @@ public class ModeShapeExample {
             }
         }
 
+    }
+    
+    private static void addSampleNode(Session session, Node node) throws ItemExistsException, PathNotFoundException, NoSuchNodeTypeException, LockException, VersionException, ConstraintViolationException, RepositoryException, FileNotFoundException{
+    	Random rnd = new Random();
+    	Node file = node.addNode("createfile"+rnd.nextInt()+".mode", "nt:file");
+        Node content = file.addNode("jcr:content", "nt:resource");
+        content.setProperty("jcr:data", session.getValueFactory().createBinary(new ByteArrayInputStream(new byte[1000])));
+        content.setProperty("jcr:encoding", "");
     }
 }
